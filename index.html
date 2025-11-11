@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f5f7fa;
+            color: #333; 
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            margin-bottom: 40px;
+        }
+        .header h1 { 
+            font-size: 2.5em; 
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .header p { 
+            font-size: 1em; 
+            opacity: 0.9;
+        }
+        .container { 
+            max-width: 1300px; 
+            margin: 0 auto; 
+            padding: 0 20px;
+        }
+        .message { 
+            padding: 15px 20px; 
+            margin-bottom: 20px; 
+            border-radius: 8px; 
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 5px solid;
+        }
+        .success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border-left-color: #28a745;
+        }
+        .error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border-left-color: #dc3545;
+        }
+        .nav-link { 
+            display: flex; 
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .nav-link a { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none; 
+            color: white; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 30px; 
+            border-radius: 50px; 
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .nav-link a:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+        h2 { 
+            color: #667eea; 
+            border-bottom: 3px solid #667eea; 
+            padding-bottom: 15px; 
+            margin-top: 35px;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-shadow: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .forms-wrapper { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 30px; 
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .form-container { 
+            flex: 1;
+            min-width: 300px;
+            padding: 35px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background: white;
+            border-left: 6px solid;
+            transition: all 0.3s;
+            border-top: 1px solid #f0f0f0;
+        }
+        .form-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        .sale-form { 
+            border-left-color: #ff9800;
+        }
+        .restock-form { 
+            border-left-color: #4caf50;
+        }
+        .form-container label { 
+            display: block; 
+            margin-top: 15px; 
+            font-weight: 600; 
+            color: #667eea;
+            font-size: 0.95em;
+        }
+        .form-container label:first-of-type {
+            margin-top: 0;
+        }
+        .form-container input[type="number"] { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 8px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 8px; 
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+        .form-container input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .sale-form button { 
+            background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%);
+        }
+        .restock-form button { 
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+        .form-container button { 
+            color: white; 
+            padding: 15px 25px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin-top: 25px; 
+            font-size: 1.05em; 
+            font-weight: 700;
+            width: 100%; 
+            transition: all 0.3s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-container button:hover { 
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+        .form-container button:active {
+            transform: translateY(-1px);
+        }
+        .data-section { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .data-table-wrapper { 
+            flex: 1; 
+            min-width: 300px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            background: white;
+        }
+        th { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            font-weight: 700;
+            padding: 18px 15px;
+            text-align: left;
+            font-size: 0.98em;
+            letter-spacing: 0.3px;
+        }
+        td { 
+            padding: 16px 15px; 
+            text-align: left; 
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 0.96em;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .low-level { 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%); 
+            color: white; 
+            font-weight: 700;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+        .medium-level {
+            background: linear-gradient(135deg, #ffd93d 0%, #ffb700 100%);
+            color: #333;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(255, 183, 0, 0.3);
+        }
+        .high-level {
+            background: linear-gradient(135deg, #6bcf7f 0%, #4caf50 100%);
+            color: white;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⛽ Fuel Management Dashboard</h1>
+        <p>Real-time Inventory & Operations Control</p>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">
+                        <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="nav-link">
+            <a href="{{ url_for('reports') }}"><i class="fas fa-chart-bar"></i> View Reports</a>
+        </div>
+        <h2><i class="fas fa-exchange-alt"></i> Inventory Operations</h2>
+        <div class="forms-wrapper">
+            <div class="form-container sale-form">
+                <h3><i class="fas fa-cash-register"></i> Process Fuel Sale</h3>
+                <form method="POST" action="{{ url_for('process_sale') }}">
+                    <label for="pump_id"><i class="fas fa-pump"></i> Pump ID (Dispensing Unit):</label>
+                    <input type="number" id="pump_id" name="pump_id" required value="1" min="1">
+                    
+                    <label for="employee_id"><i class="fas fa-user"></i> Employee ID (Staff):</label>
+                    <input type="number" id="employee_id" name="employee_id" required value="1" min="1">
+                    
+                    <label for="liters_sold"><i class="fas fa-tint"></i> Liters Sold (L):</label>
+                    <input type="number" step="0.01" id="liters_sold" name="liters_sold" required placeholder="Enter liters sold">
+                    
+                    <button type="submit"><i class="fas fa-check"></i> Complete Sale</button>
+                </form>
+            </div>
+            <div class="form-container restock-form">
+                <h3><i class="fas fa-fill-drip"></i> Restock Tank</h3>
+                <form method="POST" action="{{ url_for('restock_tank') }}">
+                    <label for="tank_id"><i class="fas fa-cube"></i> Tank ID (Receiving Fuel):</label>
+                    <input type="number" id="tank_id" name="tank_id" required value="1" min="1">
+                    
+                    <label for="liters_added"><i class="fas fa-plus"></i> Liters to Add (L):</label>
+                    <input type="number" step="1" id="liters_added" name="liters_added" required placeholder="Enter liters to add">
+                    
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px; font-style: italic;">
+                        <i class="fas fa-info-circle"></i> System enforces tank capacity constraint
+                    </p>
+                    
+                    <button type="submit"><i class="fas fa-arrow-up"></i> Add Stock</button>
+                </form>
+            </div>
+        </div>
+        <h2><i class="fas fa-boxes"></i> Current Inventory & Pricing</h2>
+        <div class="data-section">
+            <div class="data-table-wrapper">
+                <h3><i class="fas fa-water"></i> Tank Levels (Real-Time Stock)</h3>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Fuel Type</th><th>Current Level</th><th>Capacity</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for tank in tanks %}
+                        <tr>
+                            <td><strong>{{ tank.Tank_ID }}</strong></td>
+                            <td>{{ tank.Name }}</td>
+                            <td>{{ tank.Current_Level_Liters }} L</td>
+                            <td>{{ tank.Capacity_Liters }} L</td>
+                            <td>
+                                {% set percentage = (tank.Current_Level_Liters / tank.Capacity_Liters * 100) if tank.Capacity_Liters > 0 else 0 %}
+                                {% if percentage < 25 %}
+                                    <span class="low-level">🔴 Low</span>
+                                {% elif percentage < 50 %}
+                                    <span class="medium-level">🟡 Medium</span>
+                                {% else %}
+                                    <span class="high-level">🟢 Good</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="data-table-wrapper">
+                <h3><i class="fas fa-tag"></i> Fuel Prices</h3>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Fuel Name</th><th>Price Per Liter</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for fuel in fuels %}
+                        <tr>
+                            <td><strong>{{ fuel.Fuel_Type_ID }}</strong></td>
+                            <td>{{ fuel.Name }}</td>
+                            <td><strong style="color: #28a745;">₹ {{ '%.2f' | format(fuel.Current_Price_Per_Liter) }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

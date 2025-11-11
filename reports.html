@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Reports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333; 
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        .header h1 { 
+            font-size: 2.5em; 
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .header p { 
+            font-size: 1em; 
+            opacity: 0.9;
+        }
+        .container { 
+            max-width: 1300px; 
+            margin: 0 auto; 
+            padding: 0 20px;
+        }
+        .nav-link { 
+            display: flex; 
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .nav-link a { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none; 
+            color: white; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 30px; 
+            border-radius: 50px; 
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .nav-link a:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+        h2 { 
+            color: #667eea; 
+            border-bottom: 3px solid #667eea; 
+            padding-bottom: 15px; 
+            margin-top: 35px;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+        h3 { 
+            color: #d84315; 
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-size: 1em;
+            font-style: italic;
+        }
+        .report-section { 
+            background: white;
+            border: none; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s;
+        }
+        .report-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            font-weight: 600;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        td { 
+            padding: 13px 15px; 
+            text-align: left; 
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95em;
+        }
+        tr:hover {
+            background-color: #f8f8f8;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: white;
+        }
+        .badge-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .badge-success {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+        .badge-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Advanced Sales Reports</h1>
+        <p>Analytics & Business Intelligence Dashboard</p>
+    </div>
+    <div class="container">
+        <div class="nav-link">
+            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Back to Dashboard</a>
+        </div>
+        
+        <div class="report-section">
+            <h2><i class="fas fa-receipt"></i> Transaction Log</h2>
+            <h3><i class="fas fa-check-circle"></i> JOIN Query: Linking Transactions, Employees, Pumps & Fuel Types</h3>
+            {% if joins %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> Trans. ID</th>
+                            <th><i class="fas fa-user"></i> Employee</th>
+                            <th><i class="fas fa-pump"></i> Pump</th>
+                            <th><i class="fas fa-flask"></i> Fuel Type</th>
+                            <th><i class="fas fa-droplet"></i> Litres Sold</th>
+                            <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in joins %}
+                        <tr>
+                            <td><span class="badge badge-info">#{{ row.Transaction_ID }}</span></td>
+                            <td>{{ row.Employee_Name }}</td>
+                            <td><span class="badge badge-info">P{{ row.Pump_Number }}</span></td>
+                            <td>{{ row.Fuel_Type }}</td>
+                            <td><strong>{{ '%.2f' | format(row.Liters_Sold) }} L</strong></td>
+                            <td><strong>₹ {{ '%.2f' | format(row.Total_Amount) }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No transactions recorded yet</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="report-section">
+            <h2><i class="fas fa-chart-pie"></i> Revenue Summary</h2>
+            <h3><i class="fas fa-check-circle"></i> AGGREGATE Query: SUM & COUNT by Fuel Type</h3>
+            {% if aggregates %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-gas-pump"></i> Fuel Type</th>
+                            <th style="text-align: right;"><i class="fas fa-droplet"></i> Total Litres</th>
+                            <th style="text-align: right;"><i class="fas fa-rupee-sign"></i> Total Revenue</th>
+                            <th style="text-align: right;"><i class="fas fa-shopping-cart"></i> Sales Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in aggregates %}
+                        <tr>
+                            <td><strong>{{ row.Fuel_Type }}</strong></td>
+                            <td style="text-align: right;"><span class="badge badge-info">{{ '%.2f' | format(row.Total_Liters_Sold) }} L</span></td>
+                            <td style="text-align: right;"><span class="badge badge-success">₹ {{ '%.2f' | format(row.Total_Revenue) }}</span></td>
+                            <td style="text-align: right;"><span class="badge badge-warning">{{ row.Number_of_Sales }} sales</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-chart-bar"></i>
+                    <p>No revenue data available</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="report-section">
+            <h2><i class="fas fa-star"></i> Top Performers</h2>
+            <h3><i class="fas fa-check-circle"></i> NESTED Query: Employees with Above-Average Sales</h3>
+            {% if nesteds %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> Employee ID</th>
+                            <th><i class="fas fa-user"></i> Employee Name</th>
+                            <th><i class="fas fa-trophy"></i> Achievement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in nesteds %}
+                        <tr>
+                            <td><span class="badge badge-info">#{{ row.Employee_ID }}</span></td>
+                            <td><strong>{{ row.Name }}</strong></td>
+                            <td><span class="badge badge-warning">⭐ Top Performer</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>No top performers identified yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
